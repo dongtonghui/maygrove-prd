@@ -1,881 +1,568 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maygrove 订阅会员体系 PRD v1.0</title>
+<title>Maygrove Membership — UI Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --green-900: #1a3a2a;
-    --green-700: #2d6a4f;
-    --green-500: #40916c;
-    --green-300: #74c69d;
-    --green-100: #d8f3dc;
-    --green-50: #f0faf3;
-    --warm-50: #fefcf5;
-    --warm-100: #fdf8ed;
-    --red-400: #e76f51;
-    --red-100: #fde8e3;
-    --amber-500: #e9c46a;
-    --amber-50: #fef9e7;
-    --gray-900: #1a1a2e;
-    --gray-700: #4a4a5a;
-    --gray-500: #8a8a9a;
-    --gray-300: #d0d0d8;
-    --gray-100: #f0f0f2;
-    --white: #ffffff;
-    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
-    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-    --radius: 8px;
-    --radius-sm: 4px;
+    --green: #4A7C59;
+    --green-light: #7C9A7E;
+    --green-pale: #E8EFE5;
+    --green-dark: #2D5A3A;
+    --bg: #FAF8F4;
+    --surface: #FFFFFF;
+    --card-tint: #F5F7F2;
+    --text: #1C1E1B;
+    --text-muted: #7A8076;
+    --amber: #D4893B;
+    --amber-light: #F5E6D0;
+    --border: #E6E4DE;
+    --radius: 14px;
   }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Noto Sans SC', sans-serif;
-    color: var(--gray-900);
-    background: var(--gray-100);
-    line-height: 1.7;
-    font-size: 15px;
+    font-family: 'Outfit', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
   }
-
   /* Header */
   .header {
-    background: linear-gradient(135deg, var(--green-900), var(--green-700));
-    color: var(--white);
-    padding: 48px 24px 32px;
-    text-align: center;
+    position: sticky; top: 0; z-index: 50;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: flex; align-items: center; justify-content: space-between;
   }
-  .header h1 {
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
+  .header-brand { display: flex; align-items: center; gap: 8px; }
+  .header-brand svg { width: 28px; height: 28px; }
+  .header-brand span { font-weight: 600; font-size: 18px; letter-spacing: -0.01em; }
+  .header-nav { display: flex; gap: 24px; }
+  .header-nav a {
+    text-decoration: none; color: var(--text-muted); font-size: 14px; font-weight: 500;
+    transition: color .2s; cursor: pointer;
   }
-  .header .subtitle {
-    color: var(--green-300);
-    font-size: 14px;
-    opacity: 0.9;
-  }
-  .header .meta {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 16px;
-    font-size: 13px;
-    color: var(--green-100);
-  }
-  .header .meta span {
-    background: rgba(255,255,255,0.1);
-    padding: 4px 12px;
-    border-radius: 20px;
+  .header-nav a:hover, .header-nav a.active { color: var(--green); }
+  .header-nav a.active { position: relative; }
+  .header-nav a.active::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; right: 0; height: 2px;
+    background: var(--green); border-radius: 1px;
   }
 
-  .container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 24px;
+  /* Hero */
+  .hero {
+    text-align: center; padding: 80px 24px 60px; max-width: 640px; margin: 0 auto;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--green-pale); color: var(--green-dark);
+    font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em;
+    padding: 6px 14px; border-radius: 999px; margin-bottom: 20px;
+  }
+  .hero h1 { font-size: clamp(32px, 5vw, 48px); font-weight: 600; letter-spacing: -.02em; line-height: 1.15; margin-bottom: 16px; }
+  .hero h1 span { color: var(--green); }
+  .hero p { font-size: 17px; color: var(--text-muted); max-width: 480px; margin: 0 auto 8px; }
+
+  /* Phone mockup container */
+  .demo-section {
+    padding: 40px 24px 80px; max-width: 1400px; margin: 0 auto;
+  }
+  .demo-label {
+    text-align: center; font-size: 13px; font-weight: 600; text-transform: uppercase; 
+    letter-spacing: .12em; color: var(--text-muted); margin-bottom: 40px;
+  }
+  .phone-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 40px; justify-items: center;
+  }
+  .phone {
+    width: 375px; min-height: 750px; background: var(--surface);
+    border-radius: 36px; border: 1px solid var(--border);
+    box-shadow: 0 8px 40px rgba(28,30,27,.06), 0 2px 8px rgba(28,30,27,.04);
+    overflow: hidden; display: flex; flex-direction: column;
+    position: relative;
+  }
+  .phone-notch {
+    height: 40px; background: var(--text); border-radius: 0 0 20px 20px;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    font-size: 11px; color: #fff; font-family: 'JetBrains Mono', monospace; font-weight: 500;
+    flex-shrink: 0;
+  }
+  .phone-content {
+    flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column;
+  }
+  .phone-content::-webkit-scrollbar { width: 0; }
+
+  /* Screen title */
+  .screen-title { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--text-muted); margin-bottom: 16px; }
+
+  /* Membership card */
+  .member-card {
+    background: linear-gradient(135deg, var(--green-dark), var(--green));
+    border-radius: var(--radius); padding: 24px; color: #fff; margin-bottom: 20px;
+    position: relative; overflow: hidden;
+  }
+  .member-card::before {
+    content: ''; position: absolute; inset: 0; opacity: .08;
+    background: radial-gradient(circle at 80% 10%, #fff 0%, transparent 50%);
+  }
+  .member-status { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; opacity: .7; margin-bottom: 4px; }
+  .member-name { font-size: 22px; font-weight: 600; letter-spacing: -.01em; margin-bottom: 2px; }
+  .member-expiry { font-size: 13px; opacity: .75; margin-bottom: 16px; }
+  .member-tag {
+    position: absolute; top: 20px; right: 20px;
+    background: rgba(255,255,255,.18); backdrop-filter: blur(4px);
+    font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em;
+    padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.15);
   }
 
-  /* TOC */
-  .toc {
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 20px 24px;
-    margin-bottom: 24px;
+  /* Benefits grid */
+  .benefits-title { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
+  .benefits-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px;
   }
-  .toc h2 {
-    font-size: 16px;
-    color: var(--green-700);
-    margin-bottom: 12px;
-    font-weight: 600;
+  .benefit-item {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--card-tint); border-radius: 10px; padding: 12px;
+    font-size: 13px; font-weight: 500; line-height: 1.3;
   }
-  .toc ol {
-    list-style: none;
-    counter-reset: toc;
-  }
-  .toc ol li {
-    counter-increment: toc;
-    padding: 4px 0;
-    font-size: 14px;
-  }
-  .toc ol li::before {
-    content: counter(toc) ". ";
-    color: var(--green-500);
-    font-weight: 600;
-  }
-  .toc ol li a {
-    color: var(--gray-700);
-    text-decoration: none;
-  }
-  .toc ol li a:hover { color: var(--green-500); }
-
-  /* Sections */
-  .section {
-    background: var(--white);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 28px 32px;
-    margin-bottom: 20px;
-  }
-
-  .section h2 {
-    font-size: 20px;
-    color: var(--green-700);
-    border-bottom: 2px solid var(--green-100);
-    padding-bottom: 10px;
-    margin-bottom: 18px;
-    font-weight: 700;
-  }
-
-  .section h3 {
-    font-size: 17px;
-    color: var(--gray-900);
-    margin-top: 24px;
-    margin-bottom: 12px;
-    font-weight: 600;
-  }
-
-  .section h4 {
-    font-size: 15px;
-    color: var(--gray-700);
-    margin-top: 18px;
-    margin-bottom: 10px;
-    font-weight: 600;
-  }
-
-  .section p {
-    margin-bottom: 12px;
-    color: var(--gray-700);
-  }
-
-  /* Tables */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 12px 0 18px;
-    font-size: 14px;
-  }
-  th, td {
-    border: 1px solid var(--gray-300);
-    padding: 8px 12px;
-    text-align: left;
-    vertical-align: top;
-  }
-  th {
-    background: var(--green-50);
-    color: var(--green-700);
-    font-weight: 600;
-    font-size: 13px;
-  }
-  tr:nth-child(even) td {
-    background: var(--warm-50);
-  }
-
-  /* Status badges */
-  .badge-confirmed {
-    background: var(--green-100);
-    color: var(--green-700);
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .badge-pending {
-    background: var(--amber-50);
-    color: #b8860b;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .badge-placeholder {
-    background: #f0f0f0;
-    color: var(--gray-500);
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 600;
-    white-space: nowrap;
-  }
-
-  /* Flow boxes */
-  .flow {
-    background: #f8faf8;
-    border: 1px solid var(--green-100);
-    border-radius: var(--radius-sm);
-    padding: 14px 18px;
-    font-family: 'SF Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
-    font-size: 13px;
-    line-height: 1.9;
-    color: var(--gray-700);
-    margin: 12px 0 18px;
-    overflow-x: auto;
-    white-space: pre-wrap;
-  }
-
-  /* Blockquote */
-  blockquote {
-    border-left: 3px solid var(--green-300);
-    background: var(--green-50);
-    padding: 10px 16px;
-    margin: 12px 0 18px;
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-    font-size: 14px;
-    color: var(--gray-700);
-  }
-
-  /* Inline code */
-  code {
-    background: var(--green-50);
-    color: var(--green-700);
-    padding: 1px 6px;
-    border-radius: 3px;
-    font-family: 'SF Mono', 'Menlo', monospace;
-    font-size: 13px;
-  }
-
-  /* Priority tags */
-  .p0 { background: #fde8e3; color: #c0392b; padding: 1px 7px; border-radius: 10px; font-size: 12px; font-weight: 600; }
-  .p1 { background: #fef9e7; color: #b8860b; padding: 1px 7px; border-radius: 10px; font-size: 12px; font-weight: 600; }
-  .p2 { background: #eaf2f8; color: #2e86c1; padding: 1px 7px; border-radius: 10px; font-size: 12px; font-weight: 600; }
-
-  /* Checkmark icons */
-  .check { color: var(--green-500); font-weight: bold; }
-  .cross { color: var(--red-400); font-weight: bold; }
-
-  /* Module cards */
-  .module-card {
-    border: 1px solid var(--green-100);
-    border-radius: var(--radius);
-    padding: 16px 20px;
-    margin-bottom: 16px;
-    background: var(--warm-50);
-  }
-  .module-card h3 {
-    margin-top: 0;
-    color: var(--green-700);
-  }
-  .module-card .desc {
-    font-size: 14px;
-    color: var(--gray-500);
-    margin-bottom: 6px;
-  }
+  .benefit-item svg { width: 20px; height: 20px; flex-shrink: 0; }
+  .benefit-item .benefit-label { flex: 1; }
+  .benefit-item .benefit-check { color: var(--green); font-weight: 600; }
 
   /* Divider */
-  hr {
-    border: none;
-    border-top: 1px solid var(--green-100);
-    margin: 28px 0;
+  .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+  /* Action button */
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 14px; border: none; border-radius: 12px;
+    font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer;
+    transition: transform .15s, box-shadow .2s;
+  }
+  .btn:active { transform: scale(.97); }
+  .btn-primary { background: var(--green); color: #fff; }
+  .btn-primary:hover { box-shadow: 0 4px 16px rgba(74,124,89,.3); }
+  .btn-secondary { background: var(--amber); color: #fff; }
+  .btn-secondary:hover { box-shadow: 0 4px 16px rgba(212,137,59,.3); }
+  .btn-outline { background: transparent; color: var(--green); border: 1.5px solid var(--green); }
+  .btn-ghost { background: var(--card-tint); color: var(--text); }
+  .btn-small { padding: 10px 18px; font-size: 14px; width: auto; }
+
+  /* Pricing cards */
+  .pricing-grid { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .pricing-card {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px; border-radius: 12px; border: 1.5px solid var(--border);
+    cursor: pointer; transition: border-color .2s, background .2s;
+  }
+  .pricing-card:hover { border-color: var(--green-light); }
+  .pricing-card.selected { border-color: var(--green); background: var(--green-pale); }
+  .pricing-card .plan { font-weight: 600; font-size: 16px; }
+  .pricing-card .price { font-size: 18px; font-weight: 700; }
+  .pricing-card .price small { font-size: 13px; font-weight: 400; color: var(--text-muted); }
+  .pricing-card .badge {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    background: var(--amber); color: #fff; padding: 3px 8px; border-radius: 999px; margin-left: 8px;
   }
 
-  /* Responsive */
-  @media (max-width: 768px) {
-    .header { padding: 32px 16px 24px; }
-    .header h1 { font-size: 22px; }
-    .header .meta { flex-wrap: wrap; gap: 8px; }
-    .section { padding: 20px 16px; }
-    table { font-size: 13px; }
-    th, td { padding: 6px 8px; }
-    .container { padding: 12px; }
+  /* Feature comparison */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 20px; }
+  .compare-table th { text-align: left; padding: 10px 8px; font-weight: 600; border-bottom: 1.5px solid var(--border); }
+  .compare-table th:first-child { padding-left: 0; }
+  .compare-table td { padding: 12px 8px; border-bottom: 1px solid var(--border); }
+  .compare-table td:first-child { padding-left: 0; color: var(--text); font-weight: 500; }
+  .compare-table .check { color: var(--green); font-weight: 600; }
+  .compare-table .dash { color: var(--border); }
+
+  /* Review submission */
+  .review-card {
+    background: var(--card-tint); border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
+  }
+  .review-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .review-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; }
+  .upload-area {
+    border: 2px dashed var(--border); border-radius: 12px; padding: 24px;
+    text-align: center; cursor: pointer; transition: border-color .2s;
+    margin-bottom: 12px;
+  }
+  .upload-area:hover { border-color: var(--green-light); }
+  .upload-area svg { width: 32px; height: 32px; color: var(--text-muted); margin-bottom: 8px; }
+  .upload-area p { font-size: 13px; color: var(--text-muted); margin-bottom: 0; }
+  .upload-area .link { color: var(--green); font-weight: 500; }
+
+  /* Toast notification */
+  .toast {
+    position: absolute; bottom: 20px; left: 20px; right: 20px;
+    background: var(--text); color: #fff; border-radius: 12px; padding: 14px 18px;
+    font-size: 14px; display: flex; align-items: center; gap: 10px;
+    animation: toastIn .4s cubic-bezier(.16,1,.3,1) both;
+  }
+  .toast svg { width: 20px; height: 20px; flex-shrink: 0; }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(12px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+  /* Seed store */
+  .store-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;
+  }
+  .store-header h2 { font-size: 18px; font-weight: 600; }
+  .store-header .credits {
+    background: var(--green-pale); color: var(--green-dark);
+    padding: 6px 12px; border-radius: 999px; font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .credit-icon { width: 16px; height: 16px; }
+  .product-list { display: flex; flex-direction: column; gap: 10px; }
+  .product-item {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--card-tint); border-radius: 12px; padding: 14px;
+  }
+  .product-icon {
+    width: 48px; height: 48px; border-radius: 10px; background: var(--green-pale);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .product-icon svg { width: 24px; height: 24px; color: var(--green); }
+  .product-info { flex: 1; }
+  .product-info .name { font-weight: 600; font-size: 15px; }
+  .product-info .meta { font-size: 12px; color: var(--text-muted); }
+  .product-price { text-align: right; }
+  .product-price .member-price { font-size: 17px; font-weight: 700; color: var(--green); }
+  .product-price .original-price { font-size: 12px; color: var(--text-muted); text-decoration: line-through; display: block; }
+  .product-price .member-badge {
+    font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+    background: var(--green); color: #fff; padding: 2px 6px; border-radius: 4px; margin-top: 2px; display: inline-block;
   }
 
-  /* Checkbox-style for AC */
-  .ac-item { padding: 3px 0; }
-  .ac-item::before { content: "☐ "; color: var(--green-500); font-weight: bold; }
-
-  /* List styling */
-  .section ul, .section ol {
-    margin: 8px 0 14px 20px;
-    color: var(--gray-700);
+  /* Review preview page */
+  .review-item {
+    background: var(--card-tint); border-radius: 12px; padding: 16px; margin-bottom: 10px;
   }
-  .section li {
-    margin-bottom: 4px;
+  .review-item .platform { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); margin-bottom: 4px; }
+  .review-item .quote { font-size: 14px; font-style: italic; margin-bottom: 8px; color: var(--text); }
+  .review-item .status {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 500; padding: 4px 10px; border-radius: 999px;
   }
+  .status-pending { background: var(--amber-light); color: var(--amber); }
+  .status-approved { background: var(--green-pale); color: var(--green); }
 
-  /* Footer */
-  .footer {
-    text-align: center;
-    padding: 24px;
-    color: var(--gray-500);
-    font-size: 13px;
+  /* Misc */
+  .mt-12 { margin-top: 12px; }
+  .mt-16 { margin-top: 16px; }
+  .mb-16 { margin-bottom: 16px; }
+  .gap-8 { gap: 8px; }
+  .flex { display: flex; }
+  .flex-col { flex-direction: column; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .text-center { text-align: center; }
+  .text-muted { color: var(--text-muted); font-size: 13px; }
+
+  @media (max-width: 420px) {
+    .phone { width: 100%; border-radius: 24px; }
+    .phone-grid { gap: 24px; }
   }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>🌱 Maygrove 订阅会员体系</h1>
-  <div class="subtitle">Product Requirements Document</div>
-  <div class="meta">
-    <span>v1.0</span>
-    <span>2026-06-15</span>
-    <span>目标上线：2026 年 10 月</span>
+<header class="header">
+  <div class="header-brand">
+    <svg viewBox="0 0 28 28" fill="none"><path d="M14 2C16.5 2 19 4 19 8C19 11 17 14 14 14C11 14 9 11 9 8C9 4 11.5 2 14 2Z" fill="#4A7C59"/><path d="M10 16H18V20C18 22.2 16.2 24 14 24C11.8 24 10 22.2 10 20V16Z" fill="#7C9A7E"/><circle cx="14" cy="6" r="1.5" fill="#D4893B"/></svg>
+    <span>Maygrove</span>
   </div>
-</div>
+  <nav class="header-nav">
+    <a class="active" onclick="switchPhone(0)">会员中心</a>
+    <a onclick="switchPhone(1)">开通</a>
+    <a onclick="switchPhone(2)">商城</a>
+    <a onclick="switchPhone(3)">好评</a>
+  </nav>
+</header>
 
-<div class="container">
-
-  <!-- TOC -->
-  <div class="toc">
-    <h2>📑 目录</h2>
-    <ol>
-      <li><a href="#s1">产品概述</a></li>
-      <li><a href="#s2">权益定义总表</a></li>
-      <li><a href="#s3">功能模块拆解（10 模块）</a></li>
-      <li><a href="#s4">关键用户流程</a></li>
-      <li><a href="#s5">业务规则</a></li>
-      <li><a href="#s6">会员中心页面规划</a></li>
-      <li><a href="#s7">数据实体（轻量级）</a></li>
-      <li><a href="#s8">依赖与风险</a></li>
-      <li><a href="#s9">验收标准</a></li>
-      <li><a href="#s10">假设清单</a></li>
-    </ol>
+<section class="hero">
+  <div class="hero-badge">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2D5A3A" stroke-width="2"><path d="M12 2L15 9H22L16 14L19 22L12 17L5 22L8 14L2 9H9L12 2Z"/></svg>
+    Maygrove Basic 会员系统
   </div>
+  <h1>让每一次种植 <span>更有价值</span></h1>
+  <p>Basic 会员权益预览 · 种子 6 折 · 月月积分 · 包邮 · 发芽保障</p>
+</section>
 
-  <!-- Section 1 -->
-  <div class="section" id="s1">
-    <h2>一、产品概述</h2>
+<section class="demo-section">
+  <p class="demo-label">━ UI Demo · 4 个核心页面 ━</p>
+  <div class="phone-grid" id="phoneGrid">
 
-    <h3>1.1 产品定位</h3>
-    <p>Maygrove 是一款面向家庭园艺爱好者的植物种植伴侣应用，以 persona「Mavi」陪伴用户完成植物从种子到餐桌的全过程。目前 App 已具备 Smart Care、Thrive、Eco、Vacation 等核心种植模式。</p>
-    <p>本次建设两大核心板块：</p>
-    <ol>
-      <li><strong>订阅会员体系</strong>（Free / Basic / Pro 三档）</li>
-      <li><strong>种子商城</strong>（从 0 到 1 自建供应链电商能力）</li>
-    </ol>
+    <!-- Phone 1: 会员中心 -->
+    <div class="phone" data-phone="0">
+      <div class="phone-notch">9:41</div>
+      <div class="phone-content">
+        <div class="screen-title">会员中心</div>
+        <div class="member-card">
+          <div class="member-tag">Basic</div>
+          <div class="member-status">Current Plan</div>
+          <div class="member-name">Basic Member</div>
+          <div class="member-expiry">Renews on Aug 12, 2026</div>
+          <div style="display:flex;gap:8px;position:relative;z-index:1">
+            <button class="btn btn-small btn-primary" style="width:auto">Manage</button>
+            <button class="btn btn-small" style="width:auto;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2)">Cancel</button>
+          </div>
+        </div>
 
-    <h3>1.2 核心原则</h3>
-    <table>
-      <tr><th>原则</th><th>说明</th></tr>
-      <tr><td><strong>分阶段上线</strong></td><td>v1（2026.10）：Free + Basic（含种子商城从 0 到 1）→ v2：Pro 高级会员</td></tr>
-      <tr><td><strong>Basic = 供应链权益 bundle</strong></td><td>Basic 仅包含种子/耗材/物流等电商权益，不解锁任何软件功能</td></tr>
-      <tr><td><strong>Pro = 电商权益 + 软件功能解锁</strong></td><td>Pro 在 Basic 的基础上叠加 AI 助手无限制、延时摄影、AI 记忆等软件权益</td></tr>
-      <tr><td><strong>护城河功能保持免费</strong></td><td>假期模式、快速生长、节能、自动换水、自动报警 — 对所有用户免费开放</td></tr>
-      <tr><td><strong>种子积分体系</strong></td><td>引入积分作为会员权益的载体，支持按月发放和发芽保障赔付</td></tr>
-    </table>
+        <div class="benefits-title">Your Basic Benefits</div>
+        <div class="benefits-grid">
+          <div class="benefit-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="1.8"><path d="M12 2L15 9H22L16 14L19 22L12 17L5 22L8 14L2 9H9L12 2Z"/></svg>
+            <span class="benefit-label">Seeds 6折</span>
+            <span class="benefit-check">✓</span>
+          </div>
+          <div class="benefit-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>
+            <span class="benefit-label">Free Credits</span>
+            <span class="benefit-check">✓</span>
+          </div>
+          <div class="benefit-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 9H2"/></svg>
+            <span class="benefit-label">Free Shipping</span>
+            <span class="benefit-check">✓</span>
+          </div>
+          <div class="benefit-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <span class="benefit-label">Germ. Guarantee</span>
+            <span class="benefit-check">✓</span>
+          </div>
+          <div class="benefit-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span class="benefit-label">Seed Credits</span>
+            <span class="benefit-check">✓</span>
+          </div>
+          <div class="benefit-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            <span class="benefit-label">Birthday Bonus</span>
+            <span class="benefit-check">✓</span>
+          </div>
+        </div>
 
-    <h3>1.3 信息结构化</h3>
-    <table>
-      <tr><th>要素</th><th>内容</th><th>状态</th></tr>
-      <tr><td>产品名称</td><td>Maygrove</td><td><span class="badge-confirmed">✓ 确认</span></td></tr>
-      <tr><td>目标用户</td><td>西方家庭园艺用户（种子复购需求强）</td><td><span class="badge-confirmed">✓ 确认</span></td></tr>
-      <tr><td>上线时间</td><td>2026 年 10 月</td><td><span class="badge-confirmed">✓ 确认</span></td></tr>
-      <tr><td>首发市场</td><td>美国（USD 定价）</td><td><span class="badge-confirmed">✓ 确认</span></td></tr>
-      <tr><td>会员档位</td><td>Free / Basic（$19.99~24.99/月）/ Pro（未来）</td><td><span class="badge-confirmed">✓ 确认</span></td></tr>
-      <tr><td>Basic 付费选项</td><td>月付 / 季付 / 半年付 / 年付 / 2 年付</td><td><span class="badge-confirmed">✓ 确认</span></td></tr>
-      <tr><td>Basic 权益范围</td><td>种子优惠、商品折扣、包邮、售后、生日礼券 — <strong>不含软件解锁</strong></td><td><span class="badge-confirmed">✓ 确认</span></td></tr>
-      <tr><td>种子商店</td><td>从 0 到 1 自建，供应链为第三方合作</td><td><span class="badge-confirmed">✓ 确认</span></td></tr>
-      <tr><td>种子积分</td><td>每月发放固定额度，具体数值占位</td><td><span class="badge-placeholder">占位，待定</span></td></tr>
-      <tr><td>折扣形式</td><td>按比例打折（种子 6 折 / 指定商品 8 折）</td><td><span class="badge-confirmed">✓ 确认</span></td></tr>
-      <tr><td>发芽保障</td><td>种植后 30 天</td><td><span class="badge-confirmed">✓ 确认</span></td></tr>
-      <tr><td>技术平台</td><td>App（iOS/Android），种子商城需配套支付</td><td><span class="badge-confirmed">✓ 确认</span></td></tr>
-      <tr><td>护城河功能</td><td>假期模式/快速生长/节能/自动换水/自动报警 — 全免费</td><td><span class="badge-confirmed">✓ 确认</span></td></tr>
-    </table>
-  </div>
+        <hr class="divider">
+        <div class="benefits-title">Credit Balance</div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+          <div style="background:var(--green-pale);border-radius:10px;padding:12px 16px;flex:1">
+            <div style="font-size:24px;font-weight:700;color:var(--green-dark);">8</div>
+            <div style="font-size:12px;color:var(--text-muted);">Seed Credits</div>
+          </div>
+          <div style="background:var(--card-tint);border-radius:10px;padding:12px 16px;flex:1">
+            <div style="font-size:24px;font-weight:700;">234</div>
+            <div style="font-size:12px;color:var(--text-muted);">Exp. Points</div>
+          </div>
+        </div>
 
-  <!-- Section 2 -->
-  <div class="section" id="s2">
-    <h2>二、权益定义总表</h2>
-
-    <h3>2.1 三级权益矩阵</h3>
-    <table>
-      <tr>
-        <th>权益分类</th>
-        <th>权益项</th>
-        <th style="text-align:center">Free</th>
-        <th style="text-align:center">Basic（$19.99~24.99/月）</th>
-        <th style="text-align:center">Pro（未来）</th>
-      </tr>
-      <tr>
-        <td rowspan="3"><strong>种子购买</strong></td>
-        <td>种子/耗材购买</td>
-        <td style="text-align:center">原价</td>
-        <td style="text-align:center"><span class="check">✅</span> 每月免费种子积分兑换</td>
-        <td style="text-align:center"><span class="check">✅</span> 每月免费种子积分兑换</td>
-      </tr>
-      <tr>
-        <td>种子自由搭配</td>
-        <td style="text-align:center"><span class="cross">❌</span> 限套装/起订量</td>
-        <td style="text-align:center"><span class="check">✅</span> 1 颗起买，支持混搭</td>
-        <td style="text-align:center"><span class="check">✅</span> 1 颗起买，支持混搭</td>
-      </tr>
-      <tr>
-        <td>种子折扣</td>
-        <td style="text-align:center">无</td>
-        <td style="text-align:center"><span class="check">✅</span> <strong>6 折</strong></td>
-        <td style="text-align:center"><span class="check">✅</span> <strong>6 折</strong></td>
-      </tr>
-      <tr>
-        <td><strong>商品折扣</strong></td>
-        <td>指定商品折扣</td>
-        <td style="text-align:center">无</td>
-        <td style="text-align:center"><span class="check">✅</span> <strong>8 折</strong></td>
-        <td style="text-align:center"><span class="check">✅</span> <strong>8 折</strong></td>
-      </tr>
-      <tr>
-        <td><strong>物流</strong></td>
-        <td>包邮</td>
-        <td style="text-align:center">无</td>
-        <td style="text-align:center"><span class="check">✅</span> <strong>每月 1 次无门槛包邮</strong></td>
-        <td style="text-align:center"><span class="check">✅</span> 每月 1 次</td>
-      </tr>
-      <tr>
-        <td><strong>营销</strong></td>
-        <td>生日礼券</td>
-        <td style="text-align:center">无</td>
-        <td style="text-align:center"><span class="check">✅</span> 生日礼券</td>
-        <td style="text-align:center"><span class="check">✅</span> 生日礼券</td>
-      </tr>
-      <tr>
-        <td rowspan="2"><strong>售后</strong></td>
-        <td>客服回复时效</td>
-        <td style="text-align:center">48h</td>
-        <td style="text-align:center"><span class="check">✅</span> <strong>24h</strong></td>
-        <td style="text-align:center"><span class="check">✅</span> 24h</td>
-      </tr>
-      <tr>
-        <td>发芽保障</td>
-        <td style="text-align:center">无</td>
-        <td style="text-align:center"><span class="check">✅</span> <strong>30 天赔积分</strong></td>
-        <td style="text-align:center"><span class="check">✅</span> 30 天赔积分</td>
-      </tr>
-      <tr>
-        <td><strong>软件-AI</strong></td>
-        <td>AI 助手</td>
-        <td style="text-align:center">限定次数</td>
-        <td style="text-align:center">限定次数（同 Free）</td>
-        <td style="text-align:center"><span class="check">✅</span> <strong>无限制畅聊</strong></td>
-      </tr>
-      <tr>
-        <td rowspan="2"><strong>软件-拍摄</strong></td>
-        <td>延时摄影</td>
-        <td>限定天数/文件数</td>
-        <td>限定天数/文件数（同 Free）</td>
-        <td><span class="check">✅</span> <strong>长周期（coming soon）</strong></td>
-      </tr>
-      <tr>
-        <td>精彩时刻抓拍</td>
-        <td style="text-align:center">无</td>
-        <td style="text-align:center">无</td>
-        <td><span class="check">✅</span> 自动抓拍（coming soon）</td>
-      </tr>
-      <tr>
-        <td><strong>软件-智能</strong></td>
-        <td>AI 记忆升级</td>
-        <td style="text-align:center">无</td>
-        <td style="text-align:center">无</td>
-        <td><span class="check">✅</span> 记忆力和智能升级（coming soon）</td>
-      </tr>
-      <tr>
-        <td rowspan="3"><strong>软件-内容</strong></td>
-        <td>自动种植日记</td>
-        <td style="text-align:center">无</td>
-        <td style="text-align:center">无</td>
-        <td><span class="check">✅</span> 自动生成日记（coming soon）</td>
-      </tr>
-      <tr>
-        <td>会员专属植物</td>
-        <td style="text-align:center">无</td>
-        <td style="text-align:center">无</td>
-        <td><span class="check">✅</span> 专属植物（coming soon）</td>
-      </tr>
-      <tr>
-        <td>个性化种植</td>
-        <td style="text-align:center">无</td>
-        <td style="text-align:center">无</td>
-        <td><span class="check">✅</span> 传感器提升营养/甜度（coming soon）</td>
-      </tr>
-      <tr>
-        <td><strong>社区</strong></td>
-        <td>社区身份</td>
-        <td style="text-align:center">无</td>
-        <td style="text-align:center">无</td>
-        <td><span class="check">✅</span> 身份勋章（coming soon）</td>
-      </tr>
-      <tr style="background:var(--green-50)">
-        <td rowspan="5"><strong>🛡️ 护城河</strong></td>
-        <td>假期模式</td>
-        <td style="text-align:center"><span class="check">✅</span> 免费</td>
-        <td style="text-align:center"><span class="check">✅</span> 免费</td>
-        <td style="text-align:center"><span class="check">✅</span> 免费</td>
-      </tr>
-      <tr style="background:var(--green-50)">
-        <td>快速生长模式</td>
-        <td style="text-align:center"><span class="check">✅</span> 免费</td>
-        <td style="text-align:center"><span class="check">✅</span> 免费</td>
-        <td style="text-align:center"><span class="check">✅</span> 免费</td>
-      </tr>
-      <tr style="background:var(--green-50)">
-        <td>节能模式</td>
-        <td style="text-align:center"><span class="check">✅</span> 免费</td>
-        <td style="text-align:center"><span class="check">✅</span> 免费</td>
-        <td style="text-align:center"><span class="check">✅</span> 免费</td>
-      </tr>
-      <tr style="background:var(--green-50)">
-        <td>自动换水</td>
-        <td style="text-align:center"><span class="check">✅</span> 免费</td>
-        <td style="text-align:center"><span class="check">✅</span> 免费</td>
-        <td style="text-align:center"><span class="check">✅</span> 免费</td>
-      </tr>
-      <tr style="background:var(--green-50)">
-        <td>自动报警</td>
-        <td style="text-align:center"><span class="check">✅</span> 免费</td>
-        <td style="text-align:center"><span class="check">✅</span> 免费</td>
-        <td style="text-align:center"><span class="check">✅</span> 免费</td>
-      </tr>
-    </table>
-
-    <h3>2.2 Basic 权益详述</h3>
-    <table>
-      <tr><th>权益</th><th>详细规则</th><th>用户价值</th><th>优先级</th></tr>
-      <tr><td>每月免费种子积分兑换</td><td>每月发放固定额度种子积分，可在种子商店兑换指定种子包，不可提现</td><td>降低每月种花成本</td><td><span class="p0">P0</span></td></tr>
-      <tr><td>种子 1 颗起买+混搭</td><td>打破最低起订量和套装限制，支持任意品种按颗购买</td><td>小户型/阳台党灵活选种</td><td><span class="p0">P0</span></td></tr>
-      <tr><td>种子 6 折</td><td>所有种子商品享 6 折会员价</td><td>种子购买核心省钱点</td><td><span class="p0">P0</span></td></tr>
-      <tr><td>指定商品 8 折</td><td>花盆、土、工具等指定耗材享 8 折</td><td>耗材复购优惠</td><td><span class="p0">P0</span></td></tr>
-      <tr><td>每月 1 次无门槛包邮</td><td>每月首笔订单免运费，无需凑满减</td><td>降低决策门槛</td><td><span class="p1">P1</span></td></tr>
-      <tr><td>生日礼券</td><td>用户生日当月发放专属优惠券/积分</td><td>提升忠诚度</td><td><span class="p1">P1</span></td></tr>
-      <tr><td>24h 客服回复</td><td>售后问题 24 小时内响应</td><td>购物安全感</td><td><span class="p1">P1</span></td></tr>
-      <tr><td>发芽保障赔积分</td><td>种子种植后 <strong>30 天</strong>内未发芽 → 赔偿种子积分</td><td>降低购买风险感</td><td><span class="p1">P1</span></td></tr>
-    </table>
-
-    <h4>Basic 付费选项</h4>
-    <table>
-      <tr><th>付费周期</th><th>说明</th><th>策略</th></tr>
-      <tr><td>月付</td><td>每月扣费</td><td>最高月费，灵活退出</td></tr>
-      <tr><td>季付</td><td>每 3 个月扣费</td><td>月均费用略低于月付</td></tr>
-      <tr><td>半年付</td><td>每 6 个月扣费</td><td>月均费用更低</td></tr>
-      <tr><td>年付</td><td>每年扣费</td><td>月均费用显著优惠</td></tr>
-      <tr><td>2 年付</td><td>每 2 年扣费</td><td>最大优惠力度，锁定长期用户</td></tr>
-    </table>
-    <blockquote>各周期的具体定价金额由运营侧确定，后端可配置。原则：周期越长，折算月费越低。</blockquote>
-
-    <h4>Pro 权益（v2 实现，电商+软件双重解锁）</h4>
-    <p>Pro 包含 Basic 全部电商权益 + 以下软件功能解锁：</p>
-    <table>
-      <tr><th>权益</th><th>说明</th><th style="text-align:center">优先级</th></tr>
-      <tr><td>AI 助手无限制</td><td>取消对话次数限制</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>长周期延时摄影</td><td>支持跨月/跨季的长时间延时拍摄</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>精彩时刻自动抓拍</td><td>AI 识别关键生长节点自动拍摄</td><td style="text-align:center"><span class="p1">P1</span></td></tr>
-      <tr><td>AI 记忆力升级</td><td>记住用户植物品种偏好、养护习惯</td><td style="text-align:center"><span class="p1">P1</span></td></tr>
-      <tr><td>自动生成种植日记</td><td>基于生长数据和用户操作自动生成图文日记</td><td style="text-align:center"><span class="p1">P1</span></td></tr>
-      <tr><td>社区身份勋章</td><td>社区主页标识 Pro 会员身份</td><td style="text-align:center"><span class="p2">P2</span></td></tr>
-      <tr><td>会员专属植物</td><td>限量或高价值植物品种</td><td style="text-align:center"><span class="p2">P2</span></td></tr>
-      <tr><td>个性化种植（传感器）</td><td>基于传感器数据提升营养度和甜度</td><td style="text-align:center"><span class="p2">P2</span></td></tr>
-    </table>
-  </div>
-
-  <!-- Section 3 -->
-  <div class="section" id="s3">
-    <h2>三、功能模块拆解</h2>
-
-    <div class="module-card">
-      <h3>1️⃣ 会员中心模块</h3>
-      <div class="desc">覆盖会员的生命周期管理：开通 → 试用 → 续费 → 取消 → 状态展示。</div>
-      <table>
-        <tr><th>功能名称</th><th>功能说明</th><th>用户故事</th><th style="text-align:center">优先级</th></tr>
-        <tr>
-          <td>会员开通</td>
-          <td>支持月度、季度、半年、1年、2年套餐购买，价格和周期后台可配，iOS/Android 独立定价</td>
-          <td>作为用户，我希望选择适合自己的会员周期</td>
-          <td style="text-align:center"><span class="p0">P0</span></td>
-        </tr>
-        <tr>
-          <td>免费试用会员</td>
-          <td>每个账号可领取 1 次 30 天免费会员体验，需主动订阅 0 元订单</td>
-          <td>作为新用户，我希望先体验再决定是否付费</td>
-          <td style="text-align:center"><span class="p0">P0</span></td>
-        </tr>
-        <tr>
-          <td>自动续费</td>
-          <td>支持 App Store / Google Play 自动续费机制</td>
-          <td>作为用户，我希望会员权益不中断</td>
-          <td style="text-align:center"><span class="p0">P0</span></td>
-        </tr>
-        <tr>
-          <td>取消订阅</td>
-          <td>支持跳转系统订阅管理页面取消续费</td>
-          <td>作为用户，我希望自由管理订阅</td>
-          <td style="text-align:center"><span class="p0">P0</span></td>
-        </tr>
-        <tr>
-          <td>会员状态展示</td>
-          <td>显示会员等级、会员来源、到期时间、剩余天数</td>
-          <td>作为用户，我希望了解当前会员状态</td>
-          <td style="text-align:center"><span class="p0">P0</span></td>
-        </tr>
-        <tr>
-          <td>权益总览</td>
-          <td>展示全部会员权益说明</td>
-          <td>作为用户，我希望快速了解会员价值</td>
-          <td style="text-align:center"><span class="p0">P0</span></td>
-        </tr>
-        <tr>
-          <td>会员协议</td>
-          <td>展示订阅规则、自动续费说明、退款规则</td>
-          <td>作为用户，我希望了解会员规则</td>
-          <td style="text-align:center"><span class="p0">P0</span></td>
-        </tr>
-      </table>
-      <p style="margin-top:8px;font-size:13px;color:var(--gray-500);">📌 依赖：IAP 支付通道（App Store / Google Play）</p>
+        <button class="btn btn-outline mt-12">Compare Plans →</button>
+        <div style="margin-top:8px;text-align:center;font-size:12px;color:var(--text-muted)">Pro coming in v2</div>
+      </div>
     </div>
 
-    <div class="module-card">
-      <h3>2️⃣ 会员来源管理模块</h3>
-      <div class="desc">区分会员获取渠道，为后续运营和数据分析提供基础能力。</div>
-      <p style="color:var(--gray-500);">⏳ 内容待补充</p>
+    <!-- Phone 2: 开通页 -->
+    <div class="phone" data-phone="1">
+      <div class="phone-notch">9:41</div>
+      <div class="phone-content">
+        <div class="screen-title">Choose Your Plan</div>
+        <div style="background:var(--green-pale);border-radius:12px;padding:16px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="1.5"><path d="M12 2L15 9H22L16 14L19 22L12 17L5 22L8 14L2 9H9L12 2Z"/></svg>
+          <div>
+            <div style="font-weight:600;font-size:15px">Free Tier</div>
+            <div style="font-size:13px;color:var(--text-muted)">Basic hardware + app features</div>
+          </div>
+          <div style="margin-left:auto;font-size:14px;color:var(--green);font-weight:600">$0</div>
+        </div>
+
+        <div class="pricing-grid">
+          <div class="pricing-card selected">
+            <div>
+              <div class="plan">Quarterly</div>
+              <div style="font-size:12px;color:var(--text-muted)">$22.99/mo, billed quarterly</div>
+            </div>
+            <div class="price">$68.97<small>/quarter</small></div>
+          </div>
+          <div class="pricing-card">
+            <div>
+              <div class="plan">Annual
+                <span class="badge">Best Value</span>
+              </div>
+              <div style="font-size:12px;color:var(--text-muted)">$19.99/mo, billed annually</div>
+            </div>
+            <div class="price">$239.88<small>/year</small></div>
+          </div>
+          <div class="pricing-card">
+            <div>
+              <div class="plan">Two-Year</div>
+              <div style="font-size:12px;color:var(--text-muted)">$17.99/mo, billed biennially</div>
+            </div>
+            <div class="price">$431.76<small>/2yr</small></div>
+          </div>
+        </div>
+
+        <button class="btn btn-secondary">Start Basic — Quarterly</button>
+        <div style="margin-top:10px;text-align:center;font-size:12px;color:var(--text-muted)">
+          Cancel anytime · Seeds 6折 flat · Free shipping
+        </div>
+        <hr class="divider">
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;text-align:center">
+          By subscribing, you agree to our <a href="#" style="color:var(--green);text-decoration:underline">Terms</a>.
+          Renews automatically. Cancel anytime before renewal.
+        </div>
+      </div>
     </div>
 
-    <div class="module-card">
-      <h3>3️⃣ 好评送会员模块</h3>
-      <div class="desc">Amazon 和独立站统一方案，通过人工审核后发放会员。App 仅做活动展示，审核走人工流程。</div>
-      <p style="color:var(--gray-500);">⏳ 内容待补充</p>
+    <!-- Phone 3: 种子商城 -->
+    <div class="phone" data-phone="2">
+      <div class="phone-notch">9:41</div>
+      <div class="phone-content">
+        <div class="store-header">
+          <h2>Seed Store</h2>
+          <div class="credits">
+            <svg class="credit-icon" viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="2"><path d="M12 2L15 9H22L16 14L19 22L12 17L5 22L8 14L2 9H9L12 2Z"/></svg>
+            8 Credits
+          </div>
+        </div>
+        <div class="product-list">
+          <div class="product-item">
+            <div class="product-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="1.8"><path d="M12 2a8 8 0 0 0-8 8c0 4 8 12 8 12s8-8 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="2"/></svg>
+            </div>
+            <div class="product-info">
+              <div class="name">Basil Sweet</div>
+              <div class="meta">30 seeds · Organic</div>
+            </div>
+            <div class="product-price">
+              <div class="member-price">$3.59</div>
+              <div class="original-price">$5.99</div>
+              <div class="member-badge">-40%</div>
+            </div>
+          </div>
+          <div class="product-item">
+            <div class="product-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="1.8"><path d="M12 2a8 8 0 0 0-8 8c0 4 8 12 8 12s8-8 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="2"/></svg>
+            </div>
+            <div class="product-info">
+              <div class="name">Cherry Tomato</div>
+              <div class="meta">20 seeds · Heirloom</div>
+            </div>
+            <div class="product-price">
+              <div class="member-price">$4.19</div>
+              <div class="original-price">$6.99</div>
+              <div class="member-badge">-40%</div>
+            </div>
+          </div>
+          <div class="product-item">
+            <div class="product-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="1.8"><path d="M12 2a8 8 0 0 0-8 8c0 4 8 12 8 12s8-8 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="2"/></svg>
+            </div>
+            <div class="product-info">
+              <div class="name">Lavender</div>
+              <div class="meta">50 seeds · Perennial</div>
+            </div>
+            <div class="product-price">
+              <div class="member-price">$3.59</div>
+              <div class="original-price">$5.99</div>
+              <div class="member-badge">-40%</div>
+            </div>
+          </div>
+          <div class="product-item">
+            <div class="product-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="1.8"><path d="M12 2a8 8 0 0 0-8 8c0 4 8 12 8 12s8-8 8-12a8 8 0 0 0-8-8z"/><circle cx="12" cy="10" r="2"/></svg>
+            </div>
+            <div class="product-info">
+              <div class="name">Mint Spearmint</div>
+              <div class="meta">25 seeds · Easy grow</div>
+            </div>
+            <div class="product-price">
+              <div class="member-price">$2.99</div>
+              <div class="original-price">$4.99</div>
+              <div class="member-badge">-40%</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px;padding:12px;background:var(--amber-light);border-radius:10px;font-size:13px;display:flex;align-items:center;gap:8px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D4893B" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span><strong>Not a member?</strong> Seeds at 6折 with Basic. <a href="#" style="color:var(--green);font-weight:600;text-decoration:underline">Join now</a></span>
+        </div>
+      </div>
     </div>
 
-    <div class="module-card">
-      <h3>4️⃣ Seed Credits（种子分）模块</h3>
-      <div class="desc">种子积分的发放、使用、兑换、过期管理。</div>
-      <p style="color:var(--gray-500);">⏳ 内容待补充</p>
+    <!-- Phone 4: 好评送会员 -->
+    <div class="phone" data-phone="3">
+      <div class="phone-notch">9:41</div>
+      <div class="phone-content">
+        <div class="screen-title">Review Rewards</div>
+        <div style="background:var(--green-pale);border-radius:12px;padding:16px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4A7C59" stroke-width="1.8"><polygon points="12 2 15 9 22 9 16 14 19 22 12 17 5 22 8 14 2 9 9 9 12 2"/></svg>
+          <div>
+            <div style="font-weight:600;font-size:15px">Earn 1 Month Free</div>
+            <div style="font-size:13px;color:var(--text-muted)">Leave a review on Amazon or our store</div>
+          </div>
+        </div>
+
+        <div class="review-card">
+          <h3>How it works</h3>
+          <p>Submit your review screenshot & we'll verify it manually. Once approved, you get 1 month of Basic — free.</p>
+          <div style="font-size:12px;color:var(--text-muted)">
+            <div>✓ Max 3 times per year (90 days total)</div>
+            <div>✓ Manual review within 1-3 business days</div>
+            <div>✓ Must include your order number</div>
+          </div>
+        </div>
+
+        <div class="upload-area">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <p>Upload your review screenshot</p>
+          <p class="link">or paste a review link</p>
+        </div>
+
+        <input type="text" placeholder="Amazon / store order number" style="width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;margin-bottom:12px;outline:none;background:var(--surface)">
+        <input type="text" placeholder="Review URL (optional)" style="width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;font-size:14px;margin-bottom:16px;outline:none;background:var(--surface)">
+
+        <button class="btn btn-primary">Submit for Review</button>
+        <div style="margin-top:12px;text-align:center;font-size:12px;color:var(--text-muted)">
+          Already submitted? <a href="#" style="color:var(--green);font-weight:500">Check status</a>
+        </div>
+
+        <hr class="divider">
+        <div class="benefits-title" style="font-size:13px">Recent Submissions</div>
+        <div class="review-item">
+          <div class="platform">Amazon.com</div>
+          <div class="quote">"Love my Maygrove! My basil has never been this happy. The app makes it so easy."</div>
+          <div class="status status-approved">✓ Approved</div>
+        </div>
+        <div class="review-item">
+          <div class="platform">Maygrove Store</div>
+          <div class="quote">"Great product, fast delivery. The seeds arrived well-packaged."</div>
+          <div class="status status-pending">⏳ Pending Review</div>
+        </div>
+      </div>
     </div>
 
-    <div class="module-card">
-      <h3>5️⃣ 种子商城会员权益模块</h3>
-      <div class="desc">种子 6 折、指定商品 8 折、起买量、混搭、包邮等电商权益。</div>
-      <p style="color:var(--gray-500);">⏳ 内容待补充</p>
-    </div>
-
-    <div class="module-card">
-      <h3>6️⃣ Mavi 会员权益模块</h3>
-      <div class="desc">AI 助手、延时摄影、精彩时刻、AI 记忆等软件权益（Pro 专属）。</div>
-      <p style="color:var(--gray-500);">⏳ 内容待补充</p>
-    </div>
-
-    <div class="module-card">
-      <h3>7️⃣ 会员运营模块</h3>
-      <div class="desc">会员增长、留存、促活相关运营能力。</div>
-      <p style="color:var(--gray-500);">⏳ 内容待补充</p>
-    </div>
-
-    <div class="module-card">
-      <h3>8️⃣ 会员转化入口模块</h3>
-      <div class="desc">App 内各页面的会员转化入口和引导。</div>
-      <p style="color:var(--gray-500);">⏳ 内容待补充</p>
-    </div>
-
-    <div class="module-card">
-      <h3>9️⃣ 会员后台配置模块</h3>
-      <div class="desc">运营人员配置会员等级、定价、折扣、积分规则等。</div>
-      <p style="color:var(--gray-500);">⏳ 内容待补充</p>
-    </div>
-
-    <div class="module-card">
-      <h3>🔟 数据埋点模块</h3>
-      <div class="desc">会员相关行为的事件埋点和数据分析能力。</div>
-      <p style="color:var(--gray-500);">⏳ 内容待补充</p>
-    </div>
   </div>
+</section>
 
-  <!-- Section 4 -->
-  <div class="section" id="s4">
-    <h2>四、关键用户流程</h2>
-
-    <h3>4.1 主流程 A：Free → Basic 升级 → 首单种子</h3>
-    <div class="flow">Free 用户
-  → 进入种子商店 → 浏览种子 → 看到会员价锁定/原价
-  → 点击「升级 Basic 享 6 折+免费积分+包邮」
-  → 进入会员中心 → 权益对比表（Free vs Basic）
-  → 选择升级 → 确认支付（$19.99~24.99/月）
-  → 支付成功 →
-      ├─ 等级立即升级为 Basic
-      ├─ 当月种子积分到账
-      └─ 跳转种子商店 → 种子全部显示 6 折会员价 + 积分兑换标签
-  → 选购种子（支持 1 颗起买+混搭）→ 加购
-  → 结算时自动应用：
-      ├─ 种子 6 折
-      ├─ 积分抵扣（可选）
-      ├─ 首次包邮
-      └─ 生日礼券（如当月生日）
-  → 下单成功</div>
-
-    <h3>4.2 主流程 B：发芽保障申请</h3>
-    <div class="flow">Basic 用户
-  → 购买的种子播种后超过约定天数未发芽
-  → 在订单详情页 → 发起「发芽保障」
-  → 填写保障申请：
-      ├─ 选择种子品种
-      ├─ 上传未发芽照片
-      └─ 提交
-  → 后台审核（48h 内）：
-      ├─ 通过 → 赔偿积分自动到账
-      └─ 不通过 → 告知原因
-  → 用户收到通知：「🌱 发芽保障审核通过，X 积分已到账」</div>
-
-    <h3>4.3 分支流程</h3>
-    <table>
-      <tr><th>分支条件</th><th>流程说明</th></tr>
-      <tr><td>Free 用户直接买种子</td><td>只能购买预定套装/起订量，不能单颗买，不能混搭，无折扣</td></tr>
-      <tr><td>Basic 用户每月第二次下单</td><td>需付运费（首次已免），其他折扣正常享受</td></tr>
-      <tr><td>Basic 用户取消订阅</td><td>权益持续到周期结束，到期降级后所有电商权益失效</td></tr>
-      <tr><td>Basic 年付用户中途取消</td><td>不按比例退款，权益持续到周期结束</td></tr>
-      <tr><td>积分过期</td><td>过期前 7 天推送提醒：「你的种子积分即将过期，快去兑换～」</td></tr>
-      <tr><td>Free 用户收到生日礼券</td><td>不适用（生日礼券仅 Basic+）</td></tr>
-      <tr><td>用户不填生日</td><td>生日礼券不触发，会员页面可提示「填写生日领取专属礼券」</td></tr>
-    </table>
-
-    <h3>4.4 异常流程</h3>
-    <table>
-      <tr><th>异常场景</th><th>系统处理</th><th>用户看到</th></tr>
-      <tr><td>IAP 支付回调延迟</td><td>客户端轮询最多 30s，超时标记待确认</td><td>「支付处理中，请稍候…」</td></tr>
-      <tr><td>积分发放失败（定时任务异常）</td><td>标记失败记录，重试 3 次，超时告警</td><td>用户无感知</td></tr>
-      <tr><td>折扣计算错误（配置异常）</td><td>回退原价，记录错误日志</td><td>仅显示原价，不展示错误</td></tr>
-      <tr><td>发芽保障申请（种植后超过 30 天）</td><td>系统校验天数，超 30 天自动驳回</td><td>「该种子已超过发芽保障期限」</td></tr>
-      <tr><td>发芽保障照片疑似造假</td><td>人工审核标记</td><td>「审核中，我们会在 48h 内回复」</td></tr>
-      <tr><td>包邮次数跨月异常（月末下单发货跨月）</td><td>以下单时间判定，非发货时间</td><td>正常展示</td></tr>
-      <tr><td>用户生日当天支付成功</td><td>立即发放当月积分 + 生日礼券</td><td>「欢迎成为 Basic 会员！🎂 生日礼券已送达」</td></tr>
-    </table>
-  </div>
-
-  <!-- Section 5 -->
-  <div class="section" id="s5">
-    <h2>五、业务规则</h2>
-    <table>
-      <tr><th>规则 ID</th><th>规则描述</th><th>触发条件</th><th>处理逻辑</th><th style="text-align:center">优先级</th></tr>
-      <tr><td>BR-001</td><td>Free 为默认等级</td><td>用户注册</td><td>注册后自动设置等级 = Free</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>BR-002</td><td>Basic 升级立即生效</td><td>IAP 支付成功回调</td><td>用户等级 → Basic，到期时间 = 当前时间 + 1 周期</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>BR-003</td><td>Basic 到期自动降级</td><td>定时任务（每日检查）</td><td>等级 → Free，所有 Basic 权益同步失效</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>BR-004</td><td>取消订阅不退款不停止权益</td><td>用户取消续费</td><td>更新订阅状态 = 到期不续，到期日不变</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>BR-005</td><td>种子 6 折仅限 Basic+</td><td>结算价格计算</td><td>校验用户等级 ≥ Basic 才应用 6 折</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>BR-006</td><td>指定商品 8 折仅限 Basic+</td><td>结算价格计算</td><td>校验用户等级 ≥ Basic，且商品在指定范围内</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>BR-007</td><td>会员折扣不与限时促销叠加</td><td>促销活动期间</td><td>取会员价 vs 促销价中更优者</td><td style="text-align:center"><span class="p1">P1</span></td></tr>
-      <tr><td>BR-008</td><td>包邮每月每用户限 1 次</td><td>结算时</td><td>查询该用户当月包邮使用记录 ≤ 1 次</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>BR-009</td><td>包邮次数按月重置</td><td>每月 1 日定时任务</td><td>重置所有用户的包邮使用计数</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>BR-010</td><td>种子积分每月固定发放</td><td>每月 1 日定时任务</td><td>所有活跃 Basic 用户发放当月额度积分</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>BR-011</td><td>积分有效期 3 个月</td><td>积分发放时</td><td>记录过期时间，过期前 7 天推送提醒</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>BR-012</td><td>积分不可提现转让</td><td>任何积分变动操作</td><td>校验规则：积分类型仅限商店抵扣</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>BR-013</td><td>发芽保障需种植后 30 天内申请</td><td>用户提交申请</td><td>校验种子购买时间距今 ≤ 30 天</td><td style="text-align:center"><span class="p1">P1</span></td></tr>
-      <tr><td>BR-014</td><td>发芽赔偿积分不超过种子购买价</td><td>赔付计算</td><td>赔偿积分数 ≤ 该种子购买时的支付金额（按积分汇率折算）</td><td style="text-align:center"><span class="p1">P1</span></td></tr>
-      <tr><td>BR-015</td><td>生日礼券有效期 30 天</td><td>礼券发放</td><td>记录过期时间，过期自动作废</td><td style="text-align:center"><span class="p1">P1</span></td></tr>
-      <tr><td>BR-016</td><td>Free 用户只能购买套装/满足起订量</td><td>加购操作</td><td>Free 用户不可选择低于起订量的数量</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>BR-017</td><td>Pro 预留数据实体</td><td>系统初始化</td><td>Pro 等级的权益列表字段预留，管理端不展示操作入口</td><td style="text-align:center"><span class="p1">P1</span></td></tr>
-    </table>
-  </div>
-
-  <!-- Section 6 -->
-  <div class="section" id="s6">
-    <h2>六、会员中心页面规划</h2>
-
-    <h3>6.1 会员中心主页</h3>
-    <p><strong>入口：</strong>App「我的」页面 → 会员卡片/Banner</p>
-    <table>
-      <tr><th>区域</th><th>内容</th><th>展示逻辑</th></tr>
-      <tr><td>顶部徽章</td><td>当前等级名称 + 等级图标 + 订阅状态</td><td>始终展示</td></tr>
-      <tr><td>权益概览</td><td>当前等级的核心权益摘要（图标+一句话）</td><td>始终展示</td></tr>
-      <tr><td>权益对比</td><td>Free vs Basic vs Pro 横向对比表</td><td>始终展示，Pro 列标注「即将推出」</td></tr>
-      <tr><td>升级 CTA</td><td>「升级 Basic，$X.XX/月」按钮</td><td>Free 用户显示</td></tr>
-      <tr><td>已订阅信息</td><td>到期日期 / 已用包邮次数 / 积分余额</td><td>Basic 用户显示</td></tr>
-      <tr><td>管理订阅</td><td>取消续费 / 恢复订阅 / 查看订单</td><td>Basic 用户显示</td></tr>
-      <tr><td>Pro 预告</td><td>「Pro 会员即将上线，敬请期待」</td><td>始终展示在底部</td></tr>
-    </table>
-
-    <h3>6.2 种子商店商品页（会员价展示）</h3>
-    <table>
-      <tr><th>页面区域</th><th>Free 用户看到</th><th>Basic 用户看到</th></tr>
-      <tr><td>种子名称</td><td>种子名称</td><td>种子名称</td></tr>
-      <tr><td>价格</td><td>原价</td><td>原价（划线）+ <strong>会员价：$X.XX（6 折）</strong> + 「会员价」标签</td></tr>
-      <tr><td>购买方式</td><td>「购买套装」/ 最低起订量限制</td><td>「1 颗起买」+ 自由选数量</td></tr>
-      <tr><td>积分兑换</td><td>不显示</td><td>显示积分兑换价（如可用）</td></tr>
-      <tr><td>底部引导</td><td>锁图标 +「升级 Basic 享 6 折+积分兑换」</td><td>无引导</td></tr>
-    </table>
-  </div>
-
-  <!-- Section 7 -->
-  <div class="section" id="s7">
-    <h2>七、数据实体（轻量级）</h2>
-    <table>
-      <tr><th>实体</th><th>业务含义</th><th>关系</th></tr>
-      <tr><td>会员等级 (Tier)</td><td>Free / Basic / Pro 定义</td><td>一个等级被多个用户拥有；一个等级关联多项权益配置</td></tr>
-      <tr><td>用户会员身份 (Membership)</td><td>用户当前的等级 + 有效期</td><td>属于一个用户；关联一个等级</td></tr>
-      <tr><td>权益配置 (BenefitConfig)</td><td>每个等级各权益的具体参数</td><td>属于一个等级；一个等级有多个配置</td></tr>
-      <tr><td>订阅记录 (Subscription)</td><td>用户的付费订阅历史</td><td>属于一个用户；关联一个付费等级</td></tr>
-      <tr><td>种子积分 (SeedCredit)</td><td>积分的发放/使用/过期流水</td><td>属于一个用户；关联一个订单</td></tr>
-      <tr><td>种子商品 (Product)</td><td>种子商店的商品</td><td>关联基准价格、适用折扣类型</td></tr>
-      <tr><td>订单 (Order)</td><td>用户在种子商店的下单记录</td><td>属于一个用户；包含多条商品</td></tr>
-      <tr><td>包邮记录 (FreeShippingLog)</td><td>用户每月使用包邮的记录</td><td>属于一个用户；关联一个订单</td></tr>
-      <tr><td>发芽保障申请 (GerminationClaim)</td><td>用户的发芽赔付申请记录</td><td>属于一个用户；关联一个种子商品</td></tr>
-      <tr><td>生日礼券 (BirthdayVoucher)</td><td>生日礼券发放/使用记录</td><td>属于一个用户；一个用户每年一条</td></tr>
-    </table>
-  </div>
-
-  <!-- Section 8 -->
-  <div class="section" id="s8">
-    <h2>八、依赖与风险</h2>
-
-    <h3>8.1 依赖</h3>
-    <table>
-      <tr><th>依赖</th><th>内容</th><th>影响</th></tr>
-      <tr><td>IAP 支付通道</td><td>App Store / Google Play 内购 SDK</td><td>无此通道无法收费</td></tr>
-      <tr><td>供应链能力</td><td>种子采购、仓储、物流配送</td><td>种子商城的基础</td></tr>
-      <tr><td>用户账户系统</td><td>注册/登录/用户信息</td><td>会员等级绑定用户</td></tr>
-      <tr><td>推送通知</td><td>续费/积分/生日提醒</td><td>影响续费率和用户活跃</td></tr>
-      <tr><td>客服系统</td><td>售后咨询工单</td><td>响应 SLA 需要系统支撑</td></tr>
-    </table>
-
-    <h3>8.2 风险</h3>
-    <table>
-      <tr><th>风险描述</th><th style="text-align:center">可能性</th><th style="text-align:center">影响</th><th>缓解措施</th></tr>
-      <tr><td>Basic $19.99~24.99 定价 vs 权益感知不够「值」</td><td style="text-align:center">中</td><td style="text-align:center">高</td><td>核算典型用户年度省多少钱来定定价</td></tr>
-      <tr><td>种子供应链周期赶不上 10 月上线</td><td style="text-align:center">中</td><td style="text-align:center">高</td><td>第三方合作，尽早确定合作方并启动 API 对接</td></tr>
-      <tr><td>Apple 审核认为 Basic 权益不够「数字订阅」</td><td style="text-align:center">低</td><td style="text-align:center">中</td><td>Apple 允许「数字商品折扣」，文案强调「会员价」</td></tr>
-      <tr><td>积分+折扣双重优惠感知复杂</td><td style="text-align:center">中</td><td style="text-align:center">低</td><td>UI 清晰区分积分兑换区 vs 折扣价区</td></tr>
-      <tr><td>Pro「coming soon」让用户 wait-and-see</td><td style="text-align:center">低</td><td style="text-align:center">低</td><td>v1 不展示 Pro 详细权益，仅标注「即将推出」</td></tr>
-      <tr><td>发芽保障被滥用</td><td style="text-align:center">低</td><td style="text-align:center">中</td><td>人工审核 + 每用户年度赔付上限</td></tr>
-    </table>
-  </div>
-
-  <!-- Section 9 -->
-  <div class="section" id="s9">
-    <h2>九、验收标准</h2>
-    <table>
-      <tr><th>#</th><th>验收项</th><th>验收标准</th><th style="text-align:center">优先级</th></tr>
-      <tr><td>AC-001</td><td>Free 用户注册后自动为 Free</td><td>新用户登录后会员页面显示 Free</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>AC-002</td><td>Free → Basic 升级支付成功</td><td>支付成功后 5s 内等级变为 Basic，积分到账</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>AC-003</td><td>Basic 种子 6 折生效</td><td>Basic 用户在种子商品页看到原价 + 6 折价</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>AC-004</td><td>Basic 指定商品 8 折</td><td>Basic 用户在耗材商品页看到 8 折价</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>AC-005</td><td>Basic 1 颗起买+混搭</td><td>Basic 用户可选择任意品种×1 颗加购</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>AC-006</td><td>Free 用户仅能购买套装</td><td>Free 用户加购时受起订量限制</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>AC-007</td><td>Basic 每月包邮 1 次</td><td>Basic 首单免运费，第二单正常计费</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>AC-008</td><td>Basic 每月积分到账</td><td>每月 1 日 Basic 用户收到积分推送</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>AC-009</td><td>Basic 到期降级</td><td>到期后等级→Free，所有电商权益失效</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>AC-010</td><td>Basic 取消续费</td><td>用户取消后状态更新，到期日不变</td><td style="text-align:center"><span class="p0">P0</span></td></tr>
-      <tr><td>AC-011</td><td>发芽保障申请</td><td>购买后 30 天内可提交申请，审核通过后赔付积分</td><td style="text-align:center"><span class="p1">P1</span></td></tr>
-      <tr><td>AC-012</td><td>生日礼券发放</td><td>生日月 Basic 用户收到礼券推送</td><td style="text-align:center"><span class="p1">P1</span></td></tr>
-    </table>
-  </div>
-
-  <!-- Section 10 -->
-  <div class="section" id="s10">
-    <h2>十、假设清单</h2>
-    <table>
-      <tr><th>#</th><th>假设内容</th><th>状态</th></tr>
-      <tr><td>H-001</td><td>Basic 月付 $19.99~24.99 区间待确认精确值</td><td><span class="badge-pending">⚠️ 待确认</span></td></tr>
-      <tr><td>H-002</td><td>各付费周期（季付/半年付/年付/2年付）的具体定价折扣策略</td><td><span class="badge-pending">⚠️ 待确认</span></td></tr>
-      <tr><td>H-003</td><td>种子积分每月发放额度（建议占位，后端可配置）</td><td><span class="badge-placeholder">✓ 占位</span></td></tr>
-      <tr><td>H-004</td><td>积分与现金的兑换汇率（如 100 积分 = $1）</td><td><span class="badge-pending">⚠️ 待确认</span></td></tr>
-      <tr><td>H-005</td><td>种子 SKU 数量和首批上架品种</td><td><span class="badge-pending">⚠️ 待确认</span></td></tr>
-      <tr><td>H-006</td><td>Pro 会员计划上线的时间节点</td><td><span class="badge-pending">⚠️ 待确认</span></td></tr>
-      <tr><td>H-007</td><td>第三方种子供应链合作方对接方式和接口协议</td><td><span class="badge-pending">⚠️ 待确认</span></td></tr>
-    </table>
-  </div>
-
-  <div class="footer">
-    <p>Maygrove Membership PRD v1.0 · Generated by Hermes Agent · 2026-06-15</p>
-  </div>
-
-</div>
+<script>
+function switchPhone(index) {
+  const phones = document.querySelectorAll('[data-phone]');
+  const navs = document.querySelectorAll('.header-nav a');
+  phones.forEach((p, i) => {
+    p.style.scrollMarginTop = '120px';
+    p.style.transition = 'opacity .35s, transform .35s';
+    p.style.opacity = i === index ? '1' : '.45';
+    p.style.transform = i === index ? 'scale(1)' : 'scale(.96)';
+  });
+  navs.forEach((a, i) => a.classList.toggle('active', i === index));
+  document.getElementById('phoneGrid').scrollIntoView({ behavior: 'smooth' });
+}
+switchPhone(0);
+</script>
 
 </body>
 </html>
